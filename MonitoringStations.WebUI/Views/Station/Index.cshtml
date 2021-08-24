@@ -1,0 +1,108 @@
+﻿@model StationsViewModel;
+
+<style>
+    .nameCol        { max-width: 260px; }
+    .macAddressCol  { max-width: 120px; }
+    .addressIpCol   { max-width: 120px; }
+    .storeNumberCol { max-width: 80px;  }
+    .lastUpdateCol  { max-width: 100px; }
+    .optionsCol     { max-width: 60px;  }
+
+    .mvc-grid-sort {
+        padding-left: 0;
+        padding-right: 0;
+        width: 24px;
+    }
+
+    .mvc-grid-row-filters .mvc-grid-value {
+        width: 100%;
+        font-weight: normal;
+        border-radius: 4px;
+    }
+
+    .mvc-grid > table > thead > tr > th {
+        background-color: #c5e4ff;
+        border-color: #cccccc;
+        text-align: center;
+    }
+
+    .mvc-grid > table > tbody > tr > td {
+        border-color: #cccccc;
+    }
+
+    .btn40 {
+        width: 40px;
+    }
+
+    .css-classes {
+        border-radius: 6px;
+    }
+</style>
+
+<h1 class="display text-center">List of monitoring stations</h1>
+
+<div class="col-sm">
+
+    @(Html
+        .Grid(Model.Stations)
+        .Build(columns =>
+        {
+            columns.Add(x => x.Id).IsHidden = true;
+            columns.Add(x => x.Hostname).Titled("Name").Css("text-wrap").AppendCss("nameCol"); ;
+            columns.Add(x => x.MacAddress).Titled("Mac address").Css("text-wrap").AppendCss("macAddressCol"); ;
+            columns.Add(x => x.AddressIp).Titled("Address IP").Css("text-wrap").AppendCss("addressIpCol");
+            columns.Add(x => x.StoreNumber).Titled("Store Number").Css("text-center text-wrap").AppendCss("storeNumberCol").Filter.IsEnabled = false;
+            columns.Add(x => x.LastModify).Titled("Last Update").Css("text-center text-wrap").AppendCss("lastUpdateCol").Filter.IsEnabled = false;
+            columns.Add(x => $"<button type=\"button\" class=\"btn btn-primary btn40\" id=\"{x.Id}\"><span class=\"fas fa-info\" /></button> "
+                             //$"<button type=\"button\" class=\"btn btn-danger btn40\" id=\"{x.Id}\"><span class=\"fas fa-trash\" /></button>"
+                       ).Encoded(false).Css("optionsCol text-center").Titled("Options");
+        })
+        .Pageable(pager => {
+            //pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 10, "10" }, { 15, "15" },  { 20, "20" } };
+            //pager.ShowPageSizes = true;
+            //pager.PagesToDisplay = 3;
+            //pager.CurrentPage = 1;
+            pager.RowsPerPage = 10;
+        })
+        .Css("css-classes")
+        .AppendCss("table-hover")
+        .Using(GridFilterMode.Row)
+        .Filterable(GridFilterType.Single)
+        .Empty("No data found !")
+        .Sortable()
+    )
+
+    @*<table id="station" class="table table-bordered table-hover text-center">
+            <thead class="thead-dark">
+                <tr>
+                    <th calss="align-middle">Name</th>
+                    <th calss="align-middle">Mac Address</th>
+                    <th calss="align-middle">Adres IP</th>
+                    <th calss="align-middle">Store Number</th>
+                    <th calss="align-middle">Last Update</th>
+                    <th calss="align-middle">Operations</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var it in Model.Stations)
+                {
+                    <tr class="table-default">
+                        <td class="align-middle">@it.Hostname</td>
+                        <td class="align-middle">@it.MacAddress</td>
+                        <td class="align-middle">@it.AddressIp</td>
+                        <td class="align-middle">@it.StoreNumber</td>
+                        <td class="align-middle">@string.Format("{0:dd-MM-yyyy HH:mm:ss}", it.LastModify)</td>
+                        <td class="align-middle">
+                            <button type="button" class="btn btn-primary">
+                                <span class="fas fa-info"></span>
+                            </button>
+
+                            <button type="button" class="btn btn-danger">
+                                <span class="fas fa-info"></span>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>*@
+</div>

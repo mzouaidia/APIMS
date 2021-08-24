@@ -1,0 +1,111 @@
+﻿@model RoleEdit
+
+<style>
+    /*---------- CheckBox Styles ----------*/
+
+    .AddIdsInput input[type='checkbox'] {
+        display: none;
+    }
+
+    .AddIdsInput input[type='checkbox']:checked + label:before {
+        font-family: 'Font Awesome 5 Free';
+        content: "\f234";
+            cursor: pointer;
+        color:black;
+    }
+
+    .AddIdsInput input[type='checkbox'] + label:before {
+        font-weight: bold;
+        font-family: 'Font Awesome 5 Free';
+        content: "\f234";
+        cursor: pointer;
+        color: silver;
+    }
+
+    .DeleteIdsInput input[type='checkbox'] {
+        display: none;
+    }
+
+    .DeleteIdsInput input[type='checkbox']:checked + label:before {
+        font-family: 'Font Awesome 5 Free';
+        content: "\f503";
+        cursor: pointer;
+        color: black;
+    }
+
+    .DeleteIdsInput input[type='checkbox'] + label:before {
+        font-weight: bold;
+        font-family: 'Font Awesome 5 Free';
+        content: "\f503";
+        cursor: pointer;
+        color: silver;
+    }
+
+    label {
+        margin: 0;
+    }
+
+</style>
+
+<h1 class="pb-3 text-center"><i class="fas fa-pencil-alt"></i> Update Role - <strong>@Model.Role.Name</strong></h1>
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form method="post">
+    <input type="hidden" name="roleName" value="@Model.Role.Name"/>
+    <input type="hidden" name="roleId" value="@Model.Role.Id"/>
+
+    <h3 class="bg-dark p-2 text-white"><i class="fas fa-users"></i> Not members</h3>
+    <table class="table table-bordered table-sm">
+        @if (Model.NonMembers.Count() == 0)
+        {
+            <tr>
+                <td colspan="2">All Users Are Members</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var user in Model.NonMembers)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td class="text-center" style="width: 5%;">
+                        <div class="AddIdsInput">
+                            <input type="checkbox" name="AddIds" id="@user.Id.PadLeft(6)" value="@user.Id" />
+                            <label for="@user.Id.PadLeft(6)"></label>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+
+    <h3 class="bg-dark p-2 text-white"><i class="fas fa-users"></i> Members</h3>
+    <table class="table table-bordered table-sm">
+        @if (Model.Members.Count() == 0)
+        {
+            <tr>
+                <td colspan="2">No Users Are Members</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var user in Model.Members)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td class="text-center" style="width: 5%;">
+                        <div class="DeleteIdsInput">
+                            <input type="checkbox" name="DeleteIds" id="@user.Id.PadLeft(6)" value="@user.Id">
+                            <label for="@user.Id.PadLeft(6)"></label>
+                        </div>
+
+</td>
+                </tr>
+            }
+        }
+    </table>
+    <div class="d-flex justify-content-between">
+        <a asp-action="Index" class="btn btn-secondary">Back</a>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</form>

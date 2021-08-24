@@ -1,0 +1,42 @@
+﻿@model StationHistoryViewModel;
+
+<style>
+    .addressIpCol   { max-width: 140px; }
+    .storeNumberCol { max-width: 85px; }
+    .printerNameCol { max-width: 140px; }
+    .printerInfoCol { max-width: 160px; }
+    .createDateCol  { max-width: 90px; }
+</style>
+
+<h1 class="display text-center">History of station <b>@Model.StationHostName</b></h1>
+
+<div class="col-sm">
+
+    @(Html
+    .Grid(Model.StationHistories)
+    .Build(columns =>
+    {
+        columns.Add(x => x.Id).IsHidden = true;
+        columns.Add(x => x.AddressIp).Titled("Address IP").Css("text-wrap").AppendCss("addressIpCol");
+        columns.Add(x => x.StoreNumber).Titled("Store Number").Css("text-center text-wrap").AppendCss("storeNumberCol").Filter.IsEnabled = false;
+        columns.Add(x => x.PrinterName).Titled("Printer Name").Css("text-wrap").AppendCss("printerNameCol");
+        columns.Add(x => x.PrinterInfo).Titled("Printer Info").Css("text-wrap").AppendCss("printerInfoCol");
+        //columns.Add(x => x.PrinterMsg).Titled("Printer Message").Css("text-wrap").AppendCss("printerMsgCol");
+        columns.Add(x => x.CreateDate).Titled("Create Date").Css("text-center text-wrap").AppendCss("createDateCol").Filter.IsEnabled = false;
+
+@*        
+        columns.Add(x => $"<button type=\"button\" class=\"btn btn-primary btn40\" id=\"{x.Id}\"><span class=\"fas fa-info\" /></button> "
+                         //$"<button type=\"button\" class=\"btn btn-danger btn40\" id=\"{x.Id}\"><span class=\"fas fa-trash\" /></button>"
+                   ).Encoded(false).Css("optionsCol text-center").Titled("Options");
+*@
+    })
+    .Css("css-classes")
+    .AppendCss("table-hover")
+    .Using(GridFilterMode.Excel)
+    .Filterable(GridFilterType.Single)
+    .Empty("No data found !")
+    .Sortable()
+    .Pageable()
+    )
+
+</div>

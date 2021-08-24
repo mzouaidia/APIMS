@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="text-center" style="padding-top: 15%">
+        <img src="/img/disupport_logo_dark_ms.png" width="800" height="300" alt=""/>
+    </div>
+}
+else
+{
+    <div class="justify-content-center text-center" style="padding-top: 20%">
+        <span class="display-4">Access to the service<br/>requires having an account!</span>
+    </div>
+}

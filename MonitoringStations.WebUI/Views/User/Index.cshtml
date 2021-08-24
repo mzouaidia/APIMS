@@ -1,0 +1,36 @@
+﻿@model IEnumerable<IdentityUserCustom>
+
+<h1 class="display text-center">List of Users</h1>
+
+<table class="table table-striped table-bordered table-hover text-center">
+    <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Roles</th>
+            <th>Email</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr class="text-center">
+                <td>@user.Id.Substring(0, 8) ...</td>
+                <td class="text-center">@user.Nick</td>
+                <td class="text-center" i-user="@user.Id"></td>
+                <td class="text-center">@user.Email</td>
+                <td class="text-center">
+                    @if (user.LockoutEnabled)
+                    {
+                        <i class="fas fa-user fa-lg text-success" data-toggle="tooltip" data-placement="top" title="Enabled"></i>
+                    }
+                    else
+                    {
+                        <i class="fas fa-user fa-lg text-danger" data-toggle="tooltip" data-placement="top" title="Disabled"></i>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
