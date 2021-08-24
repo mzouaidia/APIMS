@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "MonitoringStations.Common": {
+      "commandName": "Project",
+      "sqlDebugging": true,
+      "nativeDebugging": true
+    }
+  }
+}

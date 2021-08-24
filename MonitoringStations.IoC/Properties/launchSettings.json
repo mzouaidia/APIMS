@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "MonitoringStations.IoC": {
+      "commandName": "Project",
+      "sqlDebugging": true,
+      "nativeDebugging": true
+    }
+  }
+}
