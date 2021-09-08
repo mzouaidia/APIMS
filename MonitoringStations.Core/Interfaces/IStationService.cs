@@ -7,17 +7,27 @@ namespace MonitoringStations.Core.Interfaces
 {
     public interface IStationService
     {
+        #region Stations
+        Task<IEnumerable<StationDto>> GetStations();
+
+        bool GetStationExist(string hostname, string macAddress, out StationDto station);
+
+        string GetStationHostname(long stationId);
+
+        string GetStationMac(long stationId);
+
+        Task<OperationStateResult> InsertUpdateStation(InputDataStationDto inputDataStationDto);
+
         int DeleteStation(long stationId);
 
         int DeleteStation(Station station);
-        
-        bool GetStationExist(string hostname, string macAddress, out StationDto station);
-        
-        string GetStationHostname(long stationId);
+        #endregion
 
-        Task<IEnumerable<StationDto>> GetStations();
+        #region Stations History
 
-        Task<OperationStateResult> InsertUpdateStation(InputDataStationDto inputDataStationDto);
+        Task<IEnumerable<StationHistoryDto>> GetHistoryStation(long id);
+
+        #endregion
 
         //Task<int> InsertStation(Station station);
 

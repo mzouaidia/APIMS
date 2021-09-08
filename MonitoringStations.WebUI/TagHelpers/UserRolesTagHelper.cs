@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using MonitoringStations.WebUI.Models;
@@ -23,12 +24,15 @@ namespace MonitoringStations.WebUI.TagHelpers
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             var names = new List<string>();
+
             var user = await _userManager.FindByIdAsync(UserId);
             if (user != null)
-                foreach (var it in _roleManager.Roles)
+            {
+                foreach (var it in _roleManager.Roles.ToList())
                     if (it != null && await _userManager.IsInRoleAsync(user, it.Name))
                         names.Add(it.NormalizedName);
-            output.Content.SetContent(names.Count == 0 ? "NO ROLES" : string.Join(", ", names));
+            }
+            output.Content.SetContent(names.Count == 0 ? "NO ROLES" : string.Join(", ", names.ToList()));
         }
     }
 }

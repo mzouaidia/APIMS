@@ -1,26 +1,28 @@
-﻿using System.Threading.Tasks;
-using System.Collections.Generic;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using MonitoringStations.Domain.Dto;
 using MonitoringStations.Common.Enums;
 using MonitoringStations.Core.Interfaces;
-using MonitoringStations.Domain.Dto;
-using MonitoringStations.API.Filters;
 using Microsoft.AspNetCore.Authorization;
 
 namespace MonitoringStations.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
     [Authorize]
-    //[ServiceFilter(typeof(TokenAuthenticationFilter))]
+    [Route("[controller]")]
     public class MonitoringStationsController : ControllerBase
     {
         private readonly IStationService _stationService;
+        private readonly IApiTokenService _apiTokenService;
 
-        public MonitoringStationsController(IStationService services)
+        public MonitoringStationsController(IStationService services, IApiTokenService apiTokenService)
         {
             _stationService = services;
+            _apiTokenService = apiTokenService;
         }
+
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<StationDto>>> GetStations()
@@ -42,6 +44,38 @@ namespace MonitoringStations.API.Controllers
                 return Created(string.Empty, state.RowId.ToString());
 
             return Ok(state.RowId);
+        }
+
+        [HttpPost("Login")]
+        [AllowAnonymous]
+        public ActionResult Login([FromBody]LoginDto loginDto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            try
+            {
+                var token = _apiTokenService.GenerateJwt(loginDto);
+
+                var result = new TokenResultDto
+                {
+                    Status = "OK",
+                    Msg = "Success",
+                    Key = token
+                };
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                var result = new TokenResultDto
+                {
+                    Status = "Fail",
+                    Msg = ex.Message,
+                    Key = string.Empty
+                };
+
+                return BadRequest(result);
+            }
         }
 
         //[HttpPost("Status")]

@@ -51,5 +51,7 @@ namespace MonitoringStations.Domain.Models
         public string Zone { get; set; }
 
         public ICollection<StationHistory> StationHistories { get; set; }
+
+        public StationUpdate StationUpdate { get; set; }
     }
 }

@@ -19,7 +19,7 @@ namespace MonitoringStations.WebUI.Controllers
 
         public IActionResult Index()
         {
-            return View(_userManager.Users.OrderBy(x=>x.UserName));
+            return View(_userManager.Users.OrderBy(x=>x.UserName).ToList());
         }
     }
 }

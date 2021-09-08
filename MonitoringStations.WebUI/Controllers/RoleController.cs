@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -22,7 +23,7 @@ namespace MonitoringStations.WebUI.Controllers
 
         public ViewResult Index()
         {
-            return View(_roleManager.Roles);
+            return View(_roleManager.Roles.ToList());
         }
 
         public IActionResult Create()
@@ -50,7 +51,8 @@ namespace MonitoringStations.WebUI.Controllers
             var members = new List<IdentityUserCustom>();
             var nonMembers = new List<IdentityUserCustom>();
 
-            foreach (var it in _userManager.Users)
+            var users = _userManager.Users.ToList();
+            foreach (var it in users)
                 if (await _userManager.IsInRoleAsync(it, role.Name))
                     members.Add(it);
                 else

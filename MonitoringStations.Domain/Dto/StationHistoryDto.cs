@@ -1,12 +1,23 @@
-﻿using System.Collections.Generic;
-using MonitoringStations.Domain.Models;
+﻿using System;
 
 namespace MonitoringStations.Domain.Dto
 {
     public class StationHistoryDto
     {
-        public string StationHostName { get; set; }
+        public long Id { get; set; }
 
-        public IEnumerable<StationHistory> StationHistories { get; set; }
+        //public string HostName { get; set; }
+
+        public string AddressIp { get; set; }
+
+        public string StoreNumber { get; set; }
+
+        public string PrinterName { get; set; }
+
+        public string PrinterState { get; set; }
+
+        public string PrinterInfo { get; set; }
+
+        public DateTime CreateDate { get; set; }
     }
 }

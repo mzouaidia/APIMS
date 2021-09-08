@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using MonitoringStations.Core.Interfaces;
+using MonitoringStations.Core.ViewModels;
 
 namespace MonitoringStations.WebUI.Controllers
 {
@@ -18,7 +19,12 @@ namespace MonitoringStations.WebUI.Controllers
         {
             var model = _stationService.GetStations();
 
-            return View(model);
+            var viewModel = new StationViewModel
+            {
+                Stations = model.Result
+            };
+            
+            return View(viewModel);
         }
     }
 }

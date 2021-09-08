@@ -17,5 +17,15 @@ namespace MonitoringStations.Domain.Dto
         public DateTime CreateDate { get; set; }
 
         public DateTime LastModify { get; set; }
+
+        public string Zone { get; set; }
+
+        public string CurrentVersion { get; set; }
+
+        public string PreviousVersion { get; set; }
+
+        public DateTime LastUpdateDate { get; set; }
+
+        public bool ToUpdate { get; set; }
     }
 }

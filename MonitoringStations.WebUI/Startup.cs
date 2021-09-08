@@ -23,12 +23,16 @@ namespace MonitoringStations.WebUI
 
         private static void RegisterServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Core.MappingProfile));
             DependencyContainer.RegisterServices(services);
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddAutoMapper(typeof(Core.MappingProfile));
+            //services.AddSingleton<Core.Interfaces.IStationService, Core.Services.StationService>();
+
             services.AddDbContext<AppDataContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("LocalPG")));
             

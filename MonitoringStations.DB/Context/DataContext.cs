@@ -25,6 +25,8 @@ namespace MonitoringStations.DB.Context
         public DbSet<Station> Stations { get; set; }
 
         public DbSet<StationHistory> StationHistory { get; set; }
+        
+        public DbSet<StationUpdate> StationUpdate { get; set; }
 
         public DbSet<ApiToken> ApiToken { get; set; }
 
@@ -40,6 +42,8 @@ namespace MonitoringStations.DB.Context
             modelBuilder.Entity<Station>().HasAlternateKey(c => new { c.Hostname, c.MacAddress }).HasName("IX_MultipleColumns");
 
             modelBuilder.Entity<Station>().HasMany(c => c.StationHistories).WithOne(c => c.Station).IsRequired();
+
+            modelBuilder.Entity<Station>().HasOne(c => c.StationUpdate).WithOne(c => c.Station).HasForeignKey<StationUpdate>(c => c.StationId).IsRequired();
         }
     }
 }
