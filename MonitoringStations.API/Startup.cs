@@ -1,17 +1,16 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using MonitoringStations.API.Filters;
-using MonitoringStations.API.TokenAuthentication;
-using MonitoringStations.Core.Interfaces;
-using MonitoringStations.Core.Services;
+using Microsoft.Extensions.DependencyInjection;
 using MonitoringStations.DB.Context;
 using MonitoringStations.Domain.Models;
-using System.Text;
+using MonitoringStations.Core.Services;
+using MonitoringStations.Core.Interfaces;
 
 namespace MonitoringStations.API
 {
@@ -34,20 +33,21 @@ namespace MonitoringStations.API
 
             services.AddAuthentication(op =>
             {
-                op.DefaultAuthenticateScheme = "Bearer";
-                op.DefaultScheme = "Bearer";
-                op.DefaultChallengeScheme = "Bearer";
-            }).AddJwtBearer(cfg =>
+                op.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                op.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                op.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(cfg =>
             {
                 //cfg.Audience = string.Empty;
-                cfg.RequireHttpsMetadata = true;
+                cfg.RequireHttpsMetadata = false;
                 cfg.SaveToken = true;
                 cfg.TokenValidationParameters = new TokenValidationParameters
                 {
-                    //RequireExpirationTime = false,
+                    RequireExpirationTime = true,
                     ValidateAudience = false,
-                    ValidateIssuer = false,
-                    //ValidIssuer = authenticationJwtCfg.JwtIssuer,
+                    ValidateIssuer = true,
+                    ValidIssuer = authenticationJwtCfg.JwtIssuer,
                     IssuerSigningKey = new SymmetricSecurityKey(Base64UrlEncoder.DecodeBytes(authenticationJwtCfg.JwtKey)),
                     ClockSkew = System.TimeSpan.Zero
                 };
@@ -59,20 +59,22 @@ namespace MonitoringStations.API
             #endregion
 
             services.AddControllers();
+            services.AddHttpContextAccessor();
 
             services.AddDbContext<DataContext>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("LocalPG"));
             });
 
-            //services.AddSingleton<TokenManager>();
 
             services.AddAutoMapper(typeof(Core.MappingProfile));
+            services.AddSingleton(authenticationJwtCfg);
             services.AddScoped<IStationService, StationService>();
-            //services.AddScoped<IApiTokenService, ApiTokenService>();
+            services.AddScoped<IApiTokenService, ApiTokenService>();
+           
 
-            //services.AddControllers(options => { options.Filters.Add<TokenAuthenticationFilter>(); });
-            
+            //services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
+
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin()
